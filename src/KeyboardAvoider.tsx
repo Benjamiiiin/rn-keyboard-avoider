@@ -57,12 +57,12 @@ const KeyboardAvoider: React.FC<Props> = ({ yOffset=10, children }) => {
   const onKeyboardShow = (e: KeyboardEvent) => {
     const topY = e.endCoordinates.screenY;
     const textRef = TextInput.State.currentlyFocusedInput();
-
+    
     textRef && textRef.measureLayout(findNodeHandle(ref.current), 
       (x: number, y: number) => {
         const pageY = y;
 
-        textRef && textRef.measure((x: number, y: number, width: number, height: number) => {
+        textRef.measure((x: number, y: number, width: number, height: number) => {
           const textInputY = pageY - kbOffset.get() + height + yOffset; // y coordinate of the bottom of this component
           const offset = (textInputY > topY) ? (textInputY - topY) : 0;
 
