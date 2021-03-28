@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { useState } from '@hookstate/core';
 import { StyleSheet, KeyboardEvent, Keyboard, findNodeHandle, TextInput, Animated, Easing, Platform } from 'react-native';
-import { Orientation, OrientationChangeEvent, addOrientationChangeListener } from 'expo-screen-orientation';
+import * as ScreenOrientation from 'expo-screen-orientation';
+
+const portraitEnums = [ScreenOrientation.Orientation.PORTRAIT_DOWN, ScreenOrientation.Orientation.PORTRAIT_UP];
 
 
 interface Props {
@@ -14,8 +16,8 @@ const KeyboardAvoider: React.FC<Props> = ({ yOffset=10, children }) => {
 
   // Handle a special case on Android where rotating from landscape to portrait causes the offset to fail
   const justRotated = useState(false);
-  const onOrientationChange = (e: OrientationChangeEvent) => {
-    if ([Orientation.PORTRAIT_DOWN, Orientation.PORTRAIT_UP].includes(e.orientationInfo.orientation))
+  const onOrientationChange = (e: ScreenOrientation.OrientationChangeEvent) => {
+    if (portraitEnums.includes(e.orientationInfo.orientation))
       justRotated.set(true);
   }
   
@@ -45,7 +47,7 @@ const KeyboardAvoider: React.FC<Props> = ({ yOffset=10, children }) => {
       onKeyboardHide
     );
 
-    const rotate = Platform.OS === 'ios' ? undefined : addOrientationChangeListener(onOrientationChange);
+    const rotate = Platform.OS === 'ios' ? undefined : ScreenOrientation.addOrientationChangeListener(onOrientationChange);
 
     return () => {
       kbShow.remove();
@@ -55,10 +57,16 @@ const KeyboardAvoider: React.FC<Props> = ({ yOffset=10, children }) => {
   }, []);
 
   const onKeyboardShow = (e: KeyboardEvent) => {
+    setTimeout(() => {
+      const textRef = TextInput.State.currentlyFocusedInput();
+      textRef && measureTextInput(textRef, e);
+    }, 100);
+  }
+
+  const measureTextInput = (textRef: any, e: KeyboardEvent) => {
     const topY = e.endCoordinates.screenY;
-    const textRef = TextInput.State.currentlyFocusedInput();
-    
-    textRef && textRef.measureLayout(findNodeHandle(ref.current), 
+
+    textRef.measureLayout(findNodeHandle(ref.current), 
       (x: number, y: number) => {
         const pageY = y;
 
