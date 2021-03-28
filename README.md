@@ -1,14 +1,14 @@
 # rn-keyboard-avoider
 
-A keyboard-avoiding view for Android and iOS in React Native with Expo.
+A simple keyboard-avoiding view for Android and iOS in React Native with Expo. Works in both portrait and landscape orientations!
 
-Pushes `TextInput` fields gracefully above the top of the keyboard, with a customisable offset between the `TextInput` and the keyboard.
+`TextInput` fields are pushed gracefully above the top of the keyboard, with a customisable offset between the `TextInput` and the keyboard.
 
 <img src="./assets/demo.gif" width='320'/>
 
 ## Installation
 ```bash
-npm install rn-keyboard-avoider
+npm install --save rn-keyboard-avoider
 ```
 
 For proper behaviour on Android devices, add the `softwareKeyboardLayoutMode` property to your ***app.json*** file as follows:
@@ -49,9 +49,9 @@ For proper behaviour on Android devices in landscape orientation, add the `disab
 Controls the distance between the top of the keyboard and the bottom of your `TextInput` field. Default is 10px.
 
 
-## Known Issues
+## Limitations
 
-- On Android devices, unfortunately, the yOffset will be lost once the user starts typing. This is due to the behaviour of the native `softwareKeyboardLayoutMode` property being set to `pan`. If an offset is absolutely needed, increase the padding of your TextInputs.
+- On Android devices, the yOffset be reduced after the user starts typing. This is due to the behaviour of the native `softwareKeyboardLayoutMode` property being set to `pan`. If you're really keen to keep the offset, it's possible to simply increase the padding of your text inputs.
 
 ## About
 
