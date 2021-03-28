@@ -1,6 +1,6 @@
 {
   "name": "rn-keyboard-avoider",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A simple keyboard-avoiding view for Android and iOS with React Native and Expo.",
   "main": "src/index",
   "react-native": "src/index",
