@@ -2,7 +2,7 @@
 
 A simple keyboard-avoiding view for Android and iOS in React Native with Expo. Works in both portrait and landscape orientations!
 
-`TextInput` fields are pushed gracefully above the top of the keyboard, with a customisable offset between the `TextInput` and the keyboard.
+`TextInput` fields are pushed gracefully above the top of the keyboard, with a customisable offset between the top of the keyboard and the bottom of the `TextInput`.
 
 <img src="./assets/demo.gif" width='320'/>
 
