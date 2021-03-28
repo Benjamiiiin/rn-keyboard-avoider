@@ -55,7 +55,7 @@ Controls the distance between the top of the keyboard and the bottom of your `Te
 
 ## About
 
-Made by ***friggitydingo*** to support the development of a mobile sci-fi MMO built with React Native.
+Made by <span style="color:#cc5f0a;font-weight:bold">friggitydingo</span> to support the development of a mobile sci-fi MMO built with React Native.
 
 [![Discord URL](https://img.shields.io/badge/-white?logo=discord&style=social&label=Join%20the%20Discord)](http://discord.gg/qRMMvxW3yc)
 
