@@ -25,7 +25,7 @@ For proper behaviour on Android devices, add the `softwareKeyboardLayoutMode` pr
 
 ## How to Use
 
-Simply wrap your app with the component:
+Simply wrap your app (or app contents) with the component:
 
 ```jsx
 import { KeyboardAvoider } from 'rn-keyboard-avoider';
@@ -51,7 +51,7 @@ Controls the distance between the top of the keyboard and the bottom of your `Te
 
 ## Limitations
 
-- On Android devices, the yOffset be reduced after the user starts typing. This is due to the behaviour of the native `softwareKeyboardLayoutMode` property being set to `pan`. If you're really keen to keep the offset, it's possible to simply increase the padding of your text inputs.
+- On Android devices, the yOffset will be reduced after the user starts typing. This is due to the behaviour of the native `softwareKeyboardLayoutMode` property being set to `pan`. If you're really keen to keep the offset, it's possible to simply increase the padding of your text inputs.
 
 ## About
 
