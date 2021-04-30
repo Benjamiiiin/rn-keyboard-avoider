@@ -1,30 +1,30 @@
-import React, { useEffect, useRef } from 'react';
-import { useState } from '@hookstate/core';
-import { StyleSheet, KeyboardEvent, Keyboard, findNodeHandle, TextInput, Animated, Easing, Platform } from 'react-native';
-import * as ScreenOrientation from 'expo-screen-orientation';
+import React, { useEffect } from 'react';
+import { StyleSheet, KeyboardEvent, Keyboard, findNodeHandle, 
+  TextInput, Animated, Easing, Platform, Dimensions, ScaledSize
+} from 'react-native';
+import { useReff, useStatee } from './Hooks';
 
-const portraitEnums = [ScreenOrientation.Orientation.PORTRAIT_DOWN, ScreenOrientation.Orientation.PORTRAIT_UP];
+const checkIsPortrait = (dims: ScaledSize ) => {
+  return dims.width < dims.height;
+}
 
 
 interface Props {
   yOffset?: number;
 }
 const KeyboardAvoider: React.FC<Props> = ({ yOffset=10, children }) => {
-  const ref = useRef(null);
-  const kbOffset = useState(0);
-  const kbOffsetAnim = useRef(new Animated.Value(0)).current;
+  const ref = useReff(null);
+  const kbOffset = useStatee(0);
+  const kbOffsetAnim = useReff(new Animated.Value(0)).cur;
 
   // Handle a special case on Android where rotating from landscape to portrait causes the offset to fail
-  const justRotated = useState(false);
-  const onOrientationChange = (e: ScreenOrientation.OrientationChangeEvent) => {
-    if (portraitEnums.includes(e.orientationInfo.orientation))
-      justRotated.set(true);
-  }
+  const isPortrait = useStatee(checkIsPortrait(Dimensions.get('screen')));
+  const justRotated = useStatee(false);
   
   const updateOffset = (toValue: number) => {
     kbOffset.set(toValue);
 
-    const didJustRotate = justRotated.get();
+    const didJustRotate = justRotated.val;
     const duration = didJustRotate ? 1000 : 100;
     const easing = didJustRotate ? null : Easing.out(Easing.ease);
     if (didJustRotate) justRotated.set(false);
@@ -47,12 +47,20 @@ const KeyboardAvoider: React.FC<Props> = ({ yOffset=10, children }) => {
       onKeyboardHide
     );
 
-    const rotate = Platform.OS === 'ios' ? undefined : ScreenOrientation.addOrientationChangeListener(onOrientationChange);
+    const onOrientationChange = () => {
+      const portrait = checkIsPortrait(Dimensions.get('screen'));
+      justRotated.set(!isPortrait.val && portrait);
+      isPortrait.set(portrait);
+    };
+
+    if (Platform.OS === 'android') {
+      Dimensions.addEventListener("change", onOrientationChange);
+    }
 
     return () => {
       kbShow.remove();
       kbHide.remove();
-      rotate && rotate.remove();
+      Dimensions.removeEventListener("change", onOrientationChange);
     }
   }, []);
 
@@ -66,12 +74,12 @@ const KeyboardAvoider: React.FC<Props> = ({ yOffset=10, children }) => {
   const measureTextInput = (textRef: any, e: KeyboardEvent) => {
     const topY = e.endCoordinates.screenY;
 
-    textRef.measureLayout(findNodeHandle(ref.current), 
+    textRef.measureLayout(findNodeHandle(ref.cur), 
       (x: number, y: number) => {
         const pageY = y;
 
         textRef.measure((x: number, y: number, width: number, height: number) => {
-          const textInputY = pageY - kbOffset.get() + height + yOffset; // y coordinate of the bottom of this component
+          const textInputY = pageY - kbOffset.val + height + yOffset; // y coordinate of the bottom of this component
           const offset = (textInputY > topY) ? (textInputY - topY) : 0;
 
           if (Platform.OS === 'android') updateOffset(Math.min(offset, yOffset));
@@ -86,7 +94,7 @@ const KeyboardAvoider: React.FC<Props> = ({ yOffset=10, children }) => {
 
   return(
     <Animated.View
-      ref={ref}
+      ref={ref.trueRef}
       style={[styles.container, { transform: [{ translateY: kbOffsetAnim }]}]}
     >
       { children }
